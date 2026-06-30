@@ -8,6 +8,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="YOUR_NEXA_CDN">
 
     <style>
         /* ─── Design Tokens ─────────────────────────────────────────── */
@@ -639,6 +640,451 @@
                 height: 18rem;
             }
         }
+
+        /* ════════════════════════════════════════════════════════════════════
+   PLASTIC SURGERY — TREATMENT SHOWCASE
+   New component for the Plastic Surgery content section only.
+   Built entirely on the existing :root tokens (--bg-card, --border,
+   --text-primary/secondary/muted/faint) and the same hover language
+   already used by .service-card (translateY lift + image zoom), so it
+   reads as native to the page rather than a bolted-on component.
+════════════════════════════════════════════════════════════════════ */
+
+        /* Shared placeholder fill — used for the featured treatment photo
+           and every grid card until real photography is dropped in. Once
+           a real <img> replaces the placeholder div, the existing zoom
+           rules below pick it up automatically — no CSS changes needed. */
+        .treatment-media-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: .6rem;
+            background: var(--bg-subtle);
+            color: var(--text-faint);
+        }
+
+        .treatment-media-placeholder span {
+            font-size: .6875rem;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* Featured treatment photo frame */
+        .featured-treatment__media {
+            aspect-ratio: 4 / 5;
+            overflow: hidden;
+        }
+
+        .featured-treatment__media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Treatment cards grid (the remaining treatments) */
+        .treatments-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 50px 0px;
+        }
+
+        .treatment-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform .45s ease, box-shadow .45s ease, border-color .45s ease;
+        }
+
+        .treatment-card:hover,
+        .treatment-card:focus-within {
+            transform: translateY(-6px);
+            border-color: var(--text-faint);
+            box-shadow: 0 24px 56px rgba(0, 0, 0, .08);
+        }
+
+        .treatment-card__media {
+            position: relative;
+            display: block;
+            aspect-ratio: 4 / 5;
+            overflow: hidden;
+        }
+
+        .treatment-card__media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .8s ease;
+        }
+
+        .treatment-card:hover .treatment-card__media img {
+            transform: scale(1.06);
+        }
+
+        .treatment-card__badge {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, .92);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border);
+        }
+
+        .treatment-card__body {
+            padding: 1.75rem 1.75rem 2rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .treatment-card__title {
+            font-size: 1.3125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: .25rem;
+            line-height: 1.25;
+        }
+
+        .treatment-card__meta {
+            font-size: .6875rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: var(--text-faint);
+            margin-bottom: .9rem;
+        }
+
+        .treatment-card__desc {
+            font-size: .9rem;
+            font-weight: 300;
+            line-height: 1.7;
+            color: var(--text-muted);
+            flex: 1;
+            margin-bottom: 1.5rem;
+        }
+
+        .treatment-card__link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: .8125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-decoration: none;
+            width: fit-content;
+            border-radius: 4px;
+        }
+
+        .treatment-card__link span {
+            transition: transform .3s ease;
+        }
+
+        .treatment-card__link:hover span,
+        .treatment-card__link:focus-visible span {
+            transform: translateX(4px);
+        }
+
+        .treatment-card__link:focus-visible,
+        .treatment-card__media:focus-visible {
+            outline: 2px solid var(--text-primary);
+            outline-offset: 3px;
+        }
+
+        /* Defensive: if the treatment count ever becomes 3n+1 again,
+           center the lone trailing card instead of leaving it
+           off-balance in the first column. No-op at the current
+           count of 6 (a clean 3x2 grid). */
+        @media (min-width: 1025px) {
+            .treatments-grid>.treatment-card:last-child:nth-child(3n+1) {
+                grid-column: 2;
+                max-width: 380px;
+                margin-inline: auto;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .treatments-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .treatments-grid {
+                grid-template-columns: 1fr;
+                gap: 1.25rem;
+            }
+
+            .treatment-card__body {
+                padding: 1.5rem 1.5rem 1.75rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            .treatment-card,
+            .treatment-card__media img,
+            .treatment-card__link span {
+                transition: none !important;
+            }
+        }
+    </style>
+
+    <style>
+        /* ─── Treatments Grid ───────────────────────────────────────────── */
+        .treatments-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .treatment-cards {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform .45s ease, box-shadow .45s ease, border-color .45s ease;
+        }
+
+        .treatment-cards:hover {
+            transform: translateY(-6px);
+            border-color: var(--text-faint);
+            box-shadow: 0 24px 56px rgba(0, 0, 0, .08);
+        }
+
+        .treatment-cards:focus-within {
+            border-color: var(--text-faint);
+            box-shadow: 0 24px 56px rgba(0, 0, 0, .08);
+        }
+
+        .treatment-card__media {
+            position: relative;
+            display: block;
+            aspect-ratio: 4 / 4;
+            overflow: hidden;
+        }
+
+        .treatment-card__media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .8s ease;
+        }
+
+        .treatment-cards:hover .treatment-card__media img {
+            transform: scale(1.06);
+        }
+
+        .treatment-card__badge {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: .02em;
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, .92);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border);
+        }
+
+        .treatment-card__body {
+            padding: 1.75rem 1.75rem 2rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .treatment-card__title {
+            font-size: 1.3125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: .25rem;
+            line-height: 1.25;
+        }
+
+        .treatment-card__meta {
+            font-size: .6875rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: var(--text-faint);
+            margin-bottom: .9rem;
+        }
+
+        .treatment-card__desc {
+            font-size: .9rem;
+            font-weight: 300;
+            line-height: 1.7;
+            color: var(--text-muted);
+            flex: 1;
+            margin-bottom: 1.5rem;
+        }
+
+        .treatment-card__link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: .8125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-decoration: none;
+            width: fit-content;
+            border-radius: 4px;
+        }
+
+        .treatment-card__link span {
+            transition: transform .3s ease;
+        }
+
+        .treatment-card__link:hover span,
+        .treatment-card__link:focus-visible span {
+            transform: translateX(4px);
+        }
+
+        .treatment-card__link:focus-visible,
+        .treatment-card__media:focus-visible {
+            outline: 2px solid var(--text-primary);
+            outline-offset: 3px;
+        }
+
+        /* Center a single orphaned card so an odd count (e.g. 7 items)
+       never ends the grid with a lonely, off-center tile. Only
+       applies at the 3-column breakpoint — at 2 and 1 columns a
+       trailing card sits naturally and needs no correction. */
+        @media (min-width: 1025px) {
+            .treatments-grid>.treatment-card:last-child:nth-child(3n+1) {
+                grid-column: 2;
+                max-width: 380px;
+                margin-inline: auto;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .treatments-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .treatments-grid {
+                grid-template-columns: 1fr;
+                gap: 1.25rem;
+            }
+
+            .treatment-card__body {
+                padding: 1.5rem 1.5rem 1.75rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            .treatment-card,
+            .treatment-card__media img,
+            .treatment-card__link span {
+                transition: none !important;
+            }
+        }
+
+        #treatments {
+            padding: 4rem 0;
+        }
+
+        #treatments .rule-line {
+            margin-bottom: 2rem;
+        }
+
+        #treatments .intro-grid {
+            gap: 2rem;
+            align-items: start;
+            margin-bottom: 2rem;
+        }
+
+        #treatments .intro-title {
+            font-size: clamp(2rem, 4vw, 2.75rem);
+            line-height: 1.15;
+        }
+
+        #treatments .intro-copy {
+            gap: .75rem;
+        }
+
+        #treatments .treatments-grid {
+            gap: 1.25rem;
+        }
+
+        #treatments .treatment-card {
+            border-radius: 20px;
+        }
+
+        #treatments .treatment-card__media {
+            aspect-ratio: 4 / 4.2;
+        }
+
+        #treatments .treatment-card__body {
+            padding: 1.25rem 1.25rem 1.5rem;
+        }
+
+        #treatments .treatment-card__title {
+            font-size: 1.125rem;
+            margin-bottom: .2rem;
+        }
+
+        #treatments .treatment-card__meta {
+            margin-bottom: .7rem;
+        }
+
+        #treatments .treatment-card__desc {
+            font-size: .875rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 1024px) {
+            #treatments .intro-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            #treatments {
+                padding: 3rem 0;
+            }
+
+            #treatments .treatment-card__body {
+                padding: 1.1rem 1.1rem 1.25rem;
+            }
+
+            #treatments .treatment-card__title {
+                font-size: 1.05rem;
+            }
+        }
     </style>
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -654,178 +1100,248 @@
 ══════════════════════════════════════════════════════════ -->
     <main class="overflow-hidden">
 
-        <section class="relative pt-16 pb-16 md:pt-20 md:pb-24" style="background:#fff;">
-
-            <!-- Subtle radial warmth -->
-            <div aria-hidden="true" class="absolute inset-0 -z-10 pointer-events-none"
-                style="background: radial-gradient(ellipse 80% 60% at 50% 0%, #f5f3f0 0%, transparent 70%);"></div>
-
+        <!-- ========================================= -->
+        <!-- HERO SECTION -->
+        <!-- ========================================= -->
+        <section class="relative pt-16 pb-16 md:pt-20 md:pb-24" style="background:#000000;">
             <div class="mx-auto max-w-7xl px-6 lg:px-12">
-                <div class="">
+                <div class="rounded-[32px] px-8 py-14 lg:px-16 lg:py-20 overflow-hidden">
+                    <div class="">
 
-                    <!-- Hero Headlines -->
-                    <div class="text-center">
+                        <!-- Hero Headlines -->
+                        <div class="text-center">
 
-                        <!-- Badge -->
-                        <span
-                            class="inline-flex items-center gap-3 rounded-full px-4 py-1.5 text-xs tracking-[0.22em] uppercase font-medium border"
-                            style="border-color:var(--border); background:var(--bg-subtle); color:var(--text-muted);">
-                            Lisbon's Premium Aesthetic Clinic
-                            <span style="width:1px; height:12px; background:var(--border);"></span>
-                            <i data-lucide="arrow-right" class="w-3 h-3" style="color:var(--text-muted);"></i>
-                        </span>
+                            <!-- Badge -->
+                            <span
+                                class="inline-flex items-center gap-3 rounded-full px-4 py-1.5 text-xs tracking-[0.22em] uppercase font-medium border"
+                                style="background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.18); color:#fff; backdrop-filter:blur(12px); ">
+                                Lisbon's Premium Aesthetic Clinic
+                                <span style="width:1px; height:12px; background:rgba(255,255,255,.25);"></span>
+                                <i data-lucide="arrow-right" class="w-3 h-3" style="color:rgba(255,255,255,.65);"></i>
+                            </span>
 
-                        <h1 class="serif mt-8 text-balance font-light leading-[1.05] lg:mt-12"
-                            style="font-size: clamp(2.8rem, 6vw, 5rem); color:var(--text-primary);">
-                            Plastic & Aesthetic Clinic in Lisbon
-                        </h1>
+                            <h1 class="mt-8 text-balance leading-[1.05] lg:mt-12"
+                                style="font-family: 'Nexa', Arial, sans-serif; font-weight:700; font-size:clamp(2.8rem,6vw,4rem); color:#fff;">
+                                Plastic Surgery
+                            </h1>
 
-                        <p class="mt-6 mx-auto lg:mx-0 text-balance text-lg leading-relaxed"
-                            style="color:var(--text-muted);">
-                            Soften dynamic facial lines and preserve natural <br> facial harmony with expert, tailored
-                            treatments.
-                        </p>
+                            <p class="mt-6 mx-auto lg:mx-0 text-balance text-lg leading-relaxed"
+                                style="color:rgba(255,255,255,.75);">
+                                Soften dynamic facial lines and preserve natural <br> facial harmony with expert,
+                                tailored
+                                treatments.
+                            </p>
 
-                        <div
-                            class="mt-10 flex flex-col items-center lg:items-start gap-3 sm:flex-row sm:justify-center lg:justify-center">
-                            <a href="https://arezuaesthetics.com/book-your-consultation/" target="_top"
-                                class="inline-flex items-center justify-center font-semibold rounded-xl px-7 py-3.5 text-sm transition-all"
-                                style="background:var(--text-primary); color:#fff;">
-                                Book Consultation
-                            </a>
-                            <a href="https://arezuaesthetics.com/services/" target="_top"
-                                class="inline-flex items-center justify-center font-medium rounded-xl px-7 py-3.5 text-sm border transition-all"
-                                style="border-color:var(--border); color:var(--text-secondary); background:transparent;">
-                                Explore Treatments
-                            </a>
+                            <div
+                                class="mt-10 flex flex-col items-center lg:items-start gap-3 sm:flex-row sm:justify-center lg:justify-center">
+                                <a href="https://arezuaesthetics.com/book-your-consultation/" target="_top"
+                                    class="inline-flex items-center justify-center font-semibold rounded-xl px-7 py-3.5 text-sm transition-all"
+                                    style="background:#fff; color:#000;">
+                                    Book Consultation
+                                </a>
+                                <a href="https://arezuaesthetics.com/services/" target="_top"
+                                    class="inline-flex items-center justify-center font-medium rounded-xl px-7 py-3.5 text-sm border transition-all"
+                                    style="border:1px solid rgba(255,255,255,.18); color:#fff; background:transparent;">
+                                    Explore Treatments
+                                </a>
+                            </div>
+
                         </div>
 
                     </div>
-
                 </div>
             </div>
-
         </section>
 
-        <!-- ────────────────────────────────────────────────────
-         CATEGORIES
-    ──────────────────────────────────────────────────── -->
-        <section class="services-section" id="services" aria-labelledby="services-heading">
-            <div class="services-grid">
 
-                <article class="service-card">
-                    <div class="service-card__image">
-                        <img src="https://arezuaesthetics.com/wp-content/uploads/2025/12/WhatsApp-Image-2025-12-24-at-14.37.30.jpeg"
-                            alt="Plastic Surgery" loading="lazy" />
-                        <span class="service-card__number" aria-hidden="true">01</span>
+        <!-- ========================================= -->
+        <!-- ABOUT SECTION -->
+        <!-- ========================================= -->
+        <section class="py-16 md:py-20" id="treatments" style="background:#fff;">
+            <div class="max-w-6xl mx-auto px-6">
+
+                <!-- Intro -->
+                <div class="grid lg:grid-cols-[0.85fr_1.15fr] gap-10 md:gap-12 items-start mb-10 fade-up intro-grid">
+                    <div>
+                        <p class="text-xs tracking-[0.3em] uppercase mb-3 font-semibold"
+                            style="color:var(--text-muted);">
+                            Our Approach</p>
+                        <h2 class="serif text-3xl md:text-4xl font-light leading-tight intro-title"
+                            style="color:var(--text-primary);">
+                            Plastic Surgery,<br><a style="color:var(--text-muted);">Thoughtfully Performed</a>
+                        </h2>
                     </div>
-                    <div class="service-card__body">
-                        <h3 class="service-card__title">Plastic Surgery</h3>
-                        <p class="service-card__desc">Precision. Refinement. Confidence.</p>
-                        <a href="https://arezuaesthetics.com/service/plastic-surgery/" target="_top"
-                            class="service-card__link">
-                            Explore Service <span aria-hidden="true">→</span>
+                    <div class="space-y-3 intro-copy">
+                        <p class="leading-relaxed" style="color:var(--text-secondary);">
+                            Our plastic surgery services in Lisbon are guided by one principle: results that look
+                            natural,
+                            balanced, and built to last. Every procedure is carried out by internationally trained,
+                            board-certified plastic surgeons, with the precision and individualised care each patient
+                            deserves.
+                        </p>
+                        <p class="leading-relaxed" style="color:var(--text-secondary);">
+                            Each surgical treatment begins with a thorough medical consultation and careful planning —
+                            weighing anatomy, proportion, and skin quality to design an outcome that ages well and feels
+                            authentically yours.
+                        </p>
+                        <p class="leading-relaxed" style="color:var(--text-secondary);">
+                            We favour subtle refinement over dramatic change, pairing advanced surgical technique with a
+                            considered understanding of facial and body aesthetics.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Treatments grid -->
+                <div class="treatments-grid fade-up">
+
+                    <article class="treatment-cards">
+                        <a class="treatment-card__media" href="https://arezuaesthetics.com/service/blepharoplasty/"
+                            target="_top" aria-label="Explore Blepharoplasty">
+                            <img src="https://arezuaesthetics.com/wp-content/uploads/2025/12/WhatsApp-Image-2025-12-24-at-15.21.53-1536x1331.jpeg"
+                                alt="Blepharoplasty — upper and lower eyelid surgery" loading="lazy" width="640"
+                                height="800">
+                            <span class="treatment-card__badge" aria-hidden="true">01</span>
                         </a>
-                    </div>
-                </article>
+                        <div class="treatment-card__body">
+                            <h3 class="treatment-card__title">Blepharoplasty</h3>
+                            <p class="treatment-card__meta">Upper &amp; Lower Eyelid Surgery</p>
+                            <p class="treatment-card__desc">Refresh tired or heavy-looking eyes by removing excess skin
+                                and
+                                fat from the lids, restoring a naturally alert, well-rested expression.</p>
+                            <a class="treatment-card__link" href="https://arezuaesthetics.com/service/blepharoplasty/"
+                                target="_top">
+                                Explore Treatment <span aria-hidden="true">→</span>
+                            </a>
+                        </div>
+                    </article>
 
-                <article class="service-card service-card--featured">
-                    <div class="service-card__image">
-                        <img src="https://arezuaesthetics.com/wp-content/uploads/2025/12/Untitled-design-2.png"
-                            alt="Aesthetic Medicine" loading="lazy" />
-                        <span class="service-card__number" aria-hidden="true">02</span>
-                    </div>
-                    <div class="service-card__body">
-                        <h3 class="service-card__title">Aesthetic Medicine</h3>
-                        <p class="service-card__desc">Natural enhancement, beautifully delivered.</p>
-                        <a href="https://arezuaesthetics.com/service/aesthetic-medicine/" target="_top"
-                            class="service-card__link">
-                            Explore Service <span aria-hidden="true">→</span>
+                    <article class="treatment-cards">
+                        <a class="treatment-card__media" href="https://arezuaesthetics.com/service/brow-lift-and-forehead-lift/"
+                            target="_top" aria-label="Explore Brow &amp; Forehead Lift">
+                            <img src="https://arezuaesthetics.com/wp-content/uploads/2025/12/WhatsApp-Image-2025-12-24-at-15.33.24.jpeg"
+                                alt="Brow and forehead lift surgery" loading="lazy" width="640" height="800">
+                            <span class="treatment-card__badge" aria-hidden="true">02</span>
                         </a>
-                    </div>
-                </article>
+                        <div class="treatment-card__body">
+                            <h3 class="treatment-card__title">Brow &amp; Forehead Lift</h3>
+                            <p class="treatment-card__meta">Eyebrow Repositioning</p>
+                            <p class="treatment-card__desc">Reposition the brow to soften forehead lines and open up the
+                                eye
+                                area, correcting sag without compromising natural expression.</p>
+                            <a class="treatment-card__link"
+                                href="https://arezuaesthetics.com/service/brow-lift-and-forehead-lift/" target="_top">
+                                Explore Treatment <span aria-hidden="true">→</span>
+                            </a>
+                        </div>
+                    </article>
 
-                <article class="service-card">
-                    <div class="service-card__image">
-                        <img src="https://arezuaesthetics.com/wp-content/uploads/2025/12/WhatsApp-Image-2025-12-28-at-19.27.52.jpeg"
-                            alt="Longevity" loading="lazy" />
-                        <span class="service-card__number" aria-hidden="true">03</span>
-                    </div>
-                    <div class="service-card__body">
-                        <h3 class="service-card__title">Longevity</h3>
-                        <p class="service-card__desc">Wellness optimized for modern living.</p>
-                        <a href="https://arezuaesthetics.com/service/longevity/" target="_top"
-                            class="service-card__link">
-                            Explore Service <span aria-hidden="true">→</span>
+                    <article class="treatment-cards">
+                        <a class="treatment-card__media"
+                            href="https://arezuaesthetics.com/service/dermatological-surgery/" target="_top"
+                            aria-label="Explore Dermatological Surgery">
+                            <img src="https://arezuaesthetics.com/wp-content/uploads/2025/12/Untitled-design-3.png"
+                                alt="Dermatological surgery — skin lesion and mole removal" loading="lazy" width="640"
+                                height="800">
+                            <span class="treatment-card__badge" aria-hidden="true">03</span>
                         </a>
-                    </div>
-                </article>
+                        <div class="treatment-card__body">
+                            <h3 class="treatment-card__title">Dermatological Surgery</h3>
+                            <p class="treatment-card__meta">Skin Lesion &amp; Mole Removal</p>
+                            <p class="treatment-card__desc">Precise surgical removal and treatment of skin lesions and
+                                moles,
+                                performed with meticulous attention to scarring and aesthetic outcome.</p>
+                            <a class="treatment-card__link"
+                                href="https://arezuaesthetics.com/service/dermatological-surgery/" target="_top">
+                                Explore Treatment <span aria-hidden="true">→</span>
+                            </a>
+                        </div>
+                    </article>
 
-            </div>
-        </section>
-
-        <!-- ────────────────────────────────────────────────────
-         SERVICES SHOWCASE
-    ──────────────────────────────────────────────────── -->
-        <section class="services-section" id="services" aria-labelledby="services-heading">
-
-            <div class="selector-hero">
-                <h2>Refined Aesthetic Solutions</h2>
-                <p>SPECIALIZED TREATMENTS</p>
-            </div>
-
-            <div class="services-grid">
-
-                <article class="service-card">
-                    <div class="service-card__image">
-                        <img src="https://arezuaesthetics.com/wp-content/uploads/2025/12/WhatsApp-Image-2025-12-24-at-15.21.53-2048x1775.jpeg"
-                            alt="Plastic Surgery" loading="lazy" />
-                        <span class="service-card__number" aria-hidden="true">01</span>
-                    </div>
-                    <div class="service-card__body">
-                        <h3 class="service-card__title">Eye Rejuvenation</h3>
-                        <p class="service-card__desc">Restore a refreshed appearance with advanced
-                            eyelid rejuvenation procedures tailored to your facial harmony.</p>
-                        <a href="https://arezuaesthetics.com/book-your-consultation/" target="_top"
-                            class="service-card__link">
-                            Explore Treatment <span aria-hidden="true">→</span>
+                    <article class="treatment-cards">
+                        <a class="treatment-card__media"
+                            href="https://arezuaesthetics.com/service/endolaser-treatments/" target="_top"
+                            aria-label="Explore Endolaser Treatments">
+                            <img src="https://arezuaesthetics.com/wp-content/uploads/2025/12/Untitled-design-9.png"
+                                alt="Endolaser treatments — laser-assisted skin tightening" loading="lazy" width="640"
+                                height="800">
+                            <span class="treatment-card__badge" aria-hidden="true">04</span>
                         </a>
-                    </div>
-                </article>
+                        <div class="treatment-card__body">
+                            <h3 class="treatment-card__title">Endolaser Treatments</h3>
+                            <p class="treatment-card__meta">Laser-Assisted Contouring</p>
+                            <p class="treatment-card__desc">Minimally invasive, laser-assisted treatment that tightens
+                                and
+                                remodels tissue beneath the skin, often paired with surgery for enhanced contouring.</p>
+                            <a class="treatment-card__link"
+                                href="https://arezuaesthetics.com/service/endolaser-treatments/" target="_top">
+                                Explore Treatment <span aria-hidden="true">→</span>
+                            </a>
+                        </div>
+                    </article>
 
-                <article class="service-card service-card--featured">
-                    <div class="service-card__image">
-                        <img src="https://arezuaesthetics.com/wp-content/uploads/2025/12/WhatsApp-Image-2025-12-24-at-17.37.48-scaled.jpeg"
-                            alt="Aesthetic Medicine" loading="lazy" />
-                        <span class="service-card__number" aria-hidden="true">02</span>
-                    </div>
-                    <div class="service-card__body">
-                        <h3 class="service-card__title">Natural Facial Rejuvenation</h3>
-                        <p class="service-card__desc"> Soft, elegant enhancements designed to preserve expression
-                            while helping create a refreshed appearance.</p>
-                        <a href="https://arezuaesthetics.com/book-your-consultation/" target="_top"
-                            class="service-card__link">
-                            Explore Treatment <span aria-hidden="true">→</span>
+                    <article class="treatment-cards">
+                        <a class="treatment-card__media"
+                            href="https://arezuaesthetics.com/service/female-intimate-surgery/" target="_top"
+                            aria-label="Explore Female Intimate Surgery">
+                            <img src="https://arezuaesthetics.com/wp-content/uploads/2025/12/Untitled-design-4.png"
+                                alt="Female intimate surgery" loading="lazy" width="640" height="800">
+                            <span class="treatment-card__badge" aria-hidden="true">05</span>
                         </a>
-                    </div>
-                </article>
+                        <div class="treatment-card__body">
+                            <h3 class="treatment-card__title">Female Intimate Surgery</h3>
+                            <p class="treatment-card__meta">Intimate Surgical Procedures</p>
+                            <p class="treatment-card__desc">Personalised intimate surgical procedures performed with
+                                discretion, comfort, and the same medical rigour as every treatment at our clinic.</p>
+                            <a class="treatment-card__link"
+                                href="https://arezuaesthetics.com/service/female-intimate-surgery/" target="_top">
+                                Explore Treatment <span aria-hidden="true">→</span>
+                            </a>
+                        </div>
+                    </article>
 
-                <article class="service-card">
-                    <div class="service-card__image">
-                        <img src="https://arezuaesthetics.com/wp-content/uploads/2026/06/Lips-BA.jpg" alt="Longevity"
-                            loading="lazy" />
-                        <span class="service-card__number" aria-hidden="true">03</span>
-                    </div>
-                    <div class="service-card__body">
-                        <h3 class="service-card__title">Elegant Filler Treatments</h3>
-                        <p class="service-card__desc">Support facial balance and harmony, and achieve balanced facial
-                            proportions through sophisticated filler techniques.</p>
-                        <a href="https://arezuaesthetics.com/book-your-consultation/" target="_top"
-                            class="service-card__link">
-                            Explore Treatment <span aria-hidden="true">→</span>
+                    <article class="treatment-cards">
+                        <a class="treatment-card__media" href="https://arezuaesthetics.com/service/bichectomy/"
+                            target="_top" aria-label="Explore Bichectomy">
+                            <img src="https://arezuaesthetics.com/wp-content/uploads/2025/12/WhatsApp-Image-2025-12-24-at-17.13.23.jpeg"
+                                alt="Bichectomy — buccal fat removal for facial contouring" loading="lazy" width="640"
+                                height="800">
+                            <span class="treatment-card__badge" aria-hidden="true">06</span>
                         </a>
-                    </div>
-                </article>
+                        <div class="treatment-card__body">
+                            <h3 class="treatment-card__title">Bichectomy</h3>
+                            <p class="treatment-card__meta">Facial Contouring — Buccal Fat Removal</p>
+                            <p class="treatment-card__desc">Sculpt and define the lower face by removing the buccal fat
+                                pads,
+                                creating a more contoured, balanced facial profile.</p>
+                            <a class="treatment-card__link" href="https://arezuaesthetics.com/service/bichectomy/"
+                                target="_top">
+                                Explore Treatment <span aria-hidden="true">→</span>
+                            </a>
+                        </div>
+                    </article>
+
+                    <article class="treatment-cards">
+                        <a class="treatment-card__media" href="https://arezuaesthetics.com/service/bullhorn-lip-lift/"
+                            target="_top" aria-label="Explore Bullhorn Lip Lift">
+                            <img src="https://arezuaesthetics.com/wp-content/uploads/2025/12/WhatsApp-Image-2025-12-24-at-17.22.41-1536x859.jpeg"
+                                alt="Bullhorn lip lift — upper lip lift surgery" loading="lazy" width="640"
+                                height="800">
+                            <span class="treatment-card__badge" aria-hidden="true">07</span>
+                        </a>
+                        <div class="treatment-card__body">
+                            <h3 class="treatment-card__title">Bullhorn Lip Lift</h3>
+                            <p class="treatment-card__meta">Upper Lip Lift</p>
+                            <p class="treatment-card__desc">A precise upper lip lift that shortens the distance between
+                                nose
+                                and lip, revealing more of the upper lip for a more youthful smile.</p>
+                            <a class="treatment-card__link"
+                                href="https://arezuaesthetics.com/service/bullhorn-lip-lift/" target="_top">
+                                Explore Treatment <span aria-hidden="true">→</span>
+                            </a>
+                        </div>
+                    </article>
+
+                </div>
 
             </div>
         </section>
@@ -1539,8 +2055,8 @@
                         <p class="font-semibold text-xs tracking-[0.2em] uppercase mb-4"
                             style="color:var(--text-secondary);">Aesthetic Medicine</p>
                         <ul class="space-y-2">
-                            <li><a href="https://arezuaesthetics.com/botox/" class="text-sm font-semibold"
-                                    style="color:var(--text-primary);">Botulinum Toxin</a></li>
+                            <li><a href="https://arezuaesthetics.com/botox/" class="text-sm font-light"
+                                    style="color:var(--text-muted);">Botulinum Toxin</a></li>
                             <li><a href="https://arezuaesthetics.com/botox/" class="text-sm font-light"
                                     style="color:var(--text-muted);">Hyaluronic Acid</a></li>
                             <li><a href="https://arezuaesthetics.com/botox/" class="text-sm font-light"
@@ -1582,7 +2098,6 @@
 
                 </div>
 
-                <div class="rule-line mb-8"></div>
                 <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                     <p class="text-sm" style="color:var(--text-faint);">© 2025 Arezu Aesthetics. All rights reserved.
                     </p>
